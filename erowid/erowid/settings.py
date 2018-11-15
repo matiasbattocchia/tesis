@@ -14,6 +14,8 @@ BOT_NAME = 'erowid'
 SPIDER_MODULES = ['erowid.spiders']
 NEWSPIDER_MODULE = 'erowid.spiders'
 
+LOG_LEVEL = 'INFO'
+LOG_FILE = 'log.txt'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'erowid (+http://www.yourdomain.com)'

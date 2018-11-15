@@ -19,13 +19,13 @@ class ExperiencesSpider(scrapy.Spider):
             yield response.follow(href, self.parse_category)
 
     def parse_category(self, response):
-        # follow links to experiences
-        for href in response.xpath('//a[contains(@href, "exp.php?ID=")]/@href'):
-            yield response.follow(href, self.parse_experience)
-
         # follow pagination links
         for href in response.xpath('//a[contains(img/@alt,"next")]/@href'):
             yield response.follow(href, self.parse_category)
+
+        # follow links to experiences
+        for href in response.xpath('//a[contains(@href, "exp.php?ID=")]/@href'):
+            yield response.follow(href, self.parse_experience)
 
     def parse_experience(self, response):
         experience = {}
