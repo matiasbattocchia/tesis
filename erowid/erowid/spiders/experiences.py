@@ -75,7 +75,8 @@ class ExperiencesSpider(scrapy.Spider):
 
             experience[key] = value.split(': ')[-1]
 
-        experience['tags'] = [tag.strip() for tag in re.sub('\([\d-]+\)', '', raw[-1]).replace(':',',').split(',')]
+        if len(raw) > 0:
+            experience['tags'] = [tag.strip() for tag in re.sub('\([\d-]+\)', '', raw[-1]).replace(':',',').split(',')]
 
         ## text
 

@@ -14,24 +14,39 @@ BOT_NAME = 'erowid'
 SPIDER_MODULES = ['erowid.spiders']
 NEWSPIDER_MODULE = 'erowid.spiders'
 
-LOG_LEVEL = 'INFO'
+#LOG_LEVEL = 'INFO'
 LOG_FILE = 'log.txt'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'erowid (+http://www.yourdomain.com)'
 
+USER_AGENT_LIST = [
+    'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.36 Safari/535.7',
+    'Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:16.0) Gecko/16.0 Firefox/16.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.3 Safari/534.53.10'
+]
+
+HTTP_PROXY = 'http://127.0.0.1:8118'
+
+DOWNLOADER_MIDDLEWARES = {
+    'erowid.middlewares.RandomUserAgentMiddleware': 400,
+    'erowid.middlewares.ProxyMiddleware': 410,
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None
+    # Disable compression middleware, so the actual HTML pages are cached
+}
+
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 4
+CONCURRENT_REQUESTS = 2
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 5
 # The download delay setting will honor only one of:
-#CONCURRENT_REQUESTS_PER_DOMAIN = 16
+CONCURRENT_REQUESTS_PER_DOMAIN = 1
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
@@ -72,7 +87,7 @@ CONCURRENT_REQUESTS = 4
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
-AUTOTHROTTLE_ENABLED = True
+#AUTOTHROTTLE_ENABLED = True
 # The initial download delay
 #AUTOTHROTTLE_START_DELAY = 5
 # The maximum download delay to be set in case of high latencies
