@@ -5,7 +5,7 @@ import re
 
 class ExperiencesSpider(scrapy.Spider):
     name = 'experiences'
-    allowed_domains = ['www.erowid.org']
+    allowed_domains = ['erowid.org']
     start_urls = ['https://www.erowid.org/experiences/exp_list.shtml']
 
     custom_settings = {
@@ -14,9 +14,14 @@ class ExperiencesSpider(scrapy.Spider):
     }
 
     def parse(self, response):
-        # follow links to categories
-        for href in response.xpath('//li/a[contains(@href, "subs")]/@href'):
-            yield response.follow(href, self.parse_category)
+        ## New way: access experiencies trying ids
+        for id in range(0,120000):
+            href = 'https://erowid.org/experiences/exp.php?ID={}'.format(id)
+            yield response.follow(href, self.parse_experience)
+            
+        ## Old way: follow links to categories
+        #for href in response.xpath('//li/a[contains(@href, "subs")]/@href'):
+        #    yield response.follow(href, self.parse_category)
 
     def parse_category(self, response):
         # follow pagination links
@@ -32,10 +37,9 @@ class ExperiencesSpider(scrapy.Spider):
 
         experience['author'] = response.css('.author').xpath('./a/text()').extract_first()
 
-        data = response.css('.bodyweight-amount').xpath('./text()').extract_first()
+        experience['cellar'] = bool(response.css('#report-rating-cellar-title').xpath('./text()').extract_first())
 
-        if data:
-            experience['weight'] = data
+        experience['weight'] = response.css('.bodyweight-amount').xpath('./text()').extract_first()
 
         ## dose chart
 
