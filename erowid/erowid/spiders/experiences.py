@@ -58,26 +58,15 @@ class ExperiencesSpider(scrapy.Spider):
 
         ## footdata
 
-        raw = []
-
-        for tr in response.css('.footdata').xpath('.//tr'):
-            for i in range(2):
-                data = tr.xpath('./td[$col]//text()', col=i+1).extract_first()
-
-                if data:
-                    data = data.strip().replace('[','')
-
-                    if len(data) > 0:
-                        raw.append(data)
-
-        for key, value in zip(['year', 'id', 'gender', 'age', 'published'], raw):
-            if value == 'Not Given': continue
-
-            experience[key] = value.split(': ')[-1]
-
-        if len(raw) > 0:
-            experience['tags'] = [tag.strip() for tag in re.sub('\([\d-]+\)', '', raw[-1]).replace(':',',').split(',')]
-
+        rows = response.css('.footdata').xpath('.//tr')
+        
+        experience['year']      = rows[0].xpath('./td[1]//text()').extract_first()
+        experience['id']        = rows[0].xpath('./td[2]//text()').extract_first()
+        experience['gender']    = rows[1].xpath('./td[1]//text()').extract_first()
+        experience['age']       = rows[2].xpath('./td[1]//text()').extract_first()
+        experience['published'] = rows[3].xpath('./td[1]//text()').extract_first()
+        experience['tags']      = rows[5].xpath('./td[1]//text()').extract_first()
+        
         ## text
 
         experience['text'] = ''.join(response.css('.report-text-surround').xpath('./text()').extract()).strip().replace('\r','')
